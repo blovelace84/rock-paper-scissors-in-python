@@ -1,19 +1,35 @@
 <!DOCTYPE html>
-<html lang="">
-<head><title>Rock Paper Scissors</title></head>
+<html>
+<head>
+    <title>Rock Paper Scissors 2026</title>
+    <style>
+        .score-board { font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid #ccc; }
+        .win { color: green; } .lose { color: red; }
+    </style>
+</head>
 <body>
-    <h1>Rock Paper Scissors</h1>
-    <form method="POST">
-        <button name="choice" value="rock">Rock</button>
-        <button name="choice" value="paper">Paper</button>
-        <button name="choice" value="scissors">Scissors</button>
-    </form>
+    <div class="score-board">
+        <strong>Player:</strong> {{ user_score }} | <strong>Computer:</strong> {{ cpu_score }}
+    </div>
 
-    {% if result %}
-        <h3>You chose: {{ user }}</h3>
-        <h3>Computer chose: {{ computer }}</h3>
-        <h2>Result: {{ result }}</h2>
-        <a href="/">Play Again</a>
+    {% if not game_over %}
+        <h2>Choose your move:</h2>
+        <form method="POST">
+            <button name="choice" value="rock">Rock</button>
+            <button name="choice" value="paper">Paper</button>
+            <button name="choice" value="scissors">Scissors</button>
+        </form>
+    {% else %}
+        <h1 class="{{ 'win' if user_score > cpu_score else 'lose' }}">
+            FINAL SCORE: {{ user_score }} - {{ cpu_score }}<br>
+            {% if user_score > cpu_score %}YOU ARE THE CHAMPION!{% else %}COMPUTER WINS THE MATCH!{% endif %}
+        </h1>
+        <a href="/reset"><button>Start New Match</button></a>
+    {% endif %}
+
+    {% if result and not game_over %}
+        <p>You chose <b>{{ user }}</b>. Computer chose <b>{{ cpu }}</b>.</p>
+        <h3>Result: {{ result }}</h3>
     {% endif %}
 </body>
 </html>
