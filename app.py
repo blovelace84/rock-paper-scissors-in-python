@@ -1,36 +1,48 @@
+from flask import Flask, render_template, request, session
 import random
 
-choices = ["rock", "paper", "scissors"]
-player_score = 0
-computer_score = 0
+app = Flask(__name__)
+app.secret_key = "secretkey123"
 
-while True:
-    print("\nScore -> You:", player_score, "| Computer:", computer_score)
+choices = ["Rock", "Paper", "Scissors"]
 
-    player = input("Choose rock, paper, scissors (or 'quit'): ").lower()
-
-    if player == "quit":
-        print("\nFinal Score:")
-        print("You:", player_score)
-        print("Computer:", computer_score)
-        break
-
-    if player not in choices:
-        print("Invalid choice! Try again.")
-        continue
-
-    computer = random.choice(choices)
-
-    print("You chose:", player)
-    print("Computer chose:", computer)
-
+def get_winner(player, computer):
     if player == computer:
-        print("It's a tie!")
+        return "Draw"
     elif (player == "rock" and computer == "scissors") or \
-         (player == "paper" and computer == "rock") or \
-         (player == "scissors" and computer == "paper"):
-        print("You win this round!")
-        player_score += 1
+            (player == "paper" and computer == "rock") or \
+            (player == "scissors" and computer == "paper"):
+        return "You Win!"
     else:
-        print("Computer wins this round!")
-        computer_score += 1
+        return "Computer Wins!"
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if "player_score" not in session:
+        session["player_score"] = 0
+        session["computer_score"] = 0
+
+    result = ""
+    computer_choice = ""
+
+    if request.method == "POST":
+        player_choice = request.form["choice"]
+        computer_choice = random.choice(choices)
+
+        result = get_winner(player_choice, computer_choice)
+
+        if result == "You Win!":
+            session["player_score"] += 1
+        elif result == "computer_score":
+            session[computer_choice] += 1
+
+    return render_template(
+        "index.html",
+        result=result,
+        computer_choice=computer_choice,
+        player_score=session["player_score"],
+        computer_score=session["computer_score"]
+    )
+
+if __name__ == "__main__":
+    app.run(debug=True)

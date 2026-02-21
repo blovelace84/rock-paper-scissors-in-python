@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rock Paper Scissors</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .score {
+            font-size: 20px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Rock Paper Scissors</h1>
+
+<div class="score">
+    You: {{ player_score }} |
+    Computer: {{ computer_score }}
+</div>
+
+<form method="POST">
+    <button name="choice" value="rock">Rock</button>
+    <button name="choice" value="paper">Paper</button>
+    <button name="choice" value="scissors">Scissors</button>
+</form>
+
+<h2>{{ result }}</h2>
+<p>Computer chose: {{ computer_choice }}</p>
+
+</body>
+</html>
