@@ -1,48 +1,36 @@
-from flask import Flask, render_template, request, session, redirect, url_for
 import random
 
-app = Flask(__name__)
-app.secret_key = "super_secret_key_2026" # Required for sessions
+choices = ["rock", "paper", "scissors"]
+player_score = 0
+computer_score = 0
 
-@app.route("/", methods=["GET", "POST"])
-def game():
-    # Initialize scores if they don't exist
-    if "user_score" not in session:
-        session["user_score"] = 0
-        session["cpu_score"] = 0
+while True:
+    print("\nScore -> You:", player_score, "| Computer:", computer_score)
 
-    result, user_choice, cpu_choice = None, None, None
-    game_over = False
+    player = input("Choose rock, paper, scissors (or 'quit'): ").lower()
 
-    if request.method == "POST":
-        user_choice = request.form.get("choice")
-        options = ["rock", "paper", "scissors"]
-        cpu_choice = random.choice(options)
+    if player == "quit":
+        print("\nFinal Score:")
+        print("You:", player_score)
+        print("Computer:", computer_score)
+        break
 
-        # Determine winner
-        if user_choice == cpu_choice:
-            result = "Tie"
-        elif (user_choice == "rock" and cpu_choice == "scissors") or \
-             (user_choice == "paper" and cpu_choice == "rock") or \
-             (user_choice == "scissors" and cpu_choice == "paper"):
-            result = "Win"
-            session["user_score"] += 1
-        else:
-            result = "Lose"
-            session["cpu_score"] += 1
+    if player not in choices:
+        print("Invalid choice! Try again.")
+        continue
 
-        # Check for Final Game Over (e.g., first to 3)
-        if session["user_score"] >= 3 or session["cpu_score"] >= 3:
-            game_over = True
+    computer = random.choice(choices)
 
-    return render_template("index.html", result=result, user=user_choice,
-                           cpu=cpu_choice, user_score=session["user_score"],
-                           cpu_score=session["cpu_score"], game_over=game_over)
+    print("You chose:", player)
+    print("Computer chose:", computer)
 
-@app.route("/reset")
-def reset():
-    session.clear()
-    return redirect(url_for("game"))
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    if player == computer:
+        print("It's a tie!")
+    elif (player == "rock" and computer == "scissors") or \
+         (player == "paper" and computer == "rock") or \
+         (player == "scissors" and computer == "paper"):
+        print("You win this round!")
+        player_score += 1
+    else:
+        print("Computer wins this round!")
+        computer_score += 1
