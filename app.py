@@ -4,14 +4,14 @@ import random
 app = Flask(__name__)
 app.secret_key = "secretkey123"
 
-choices = ["Rock", "Paper", "Scissors"]
+choices = ["rock", "paper", "scissors"]
 
 def get_winner(player, computer):
     if player == computer:
-        return "Draw"
+        return "Tie!"
     elif (player == "rock" and computer == "scissors") or \
-            (player == "paper" and computer == "rock") or \
-            (player == "scissors" and computer == "paper"):
+         (player == "paper" and computer == "rock") or \
+         (player == "scissors" and computer == "paper"):
         return "You Win!"
     else:
         return "Computer Wins!"
@@ -33,8 +33,8 @@ def index():
 
         if result == "You Win!":
             session["player_score"] += 1
-        elif result == "computer_score":
-            session[computer_choice] += 1
+        elif result == "Computer Wins!":
+            session["computer_score"] += 1
 
     return render_template(
         "index.html",
